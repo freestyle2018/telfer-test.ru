@@ -1,0 +1,403 @@
+<?xml version="1.0" encoding="utf-8"?>
+<modification>
+    <name>SEO HTTPS FIX PRO</name>
+    <id>{MOD}</id>
+    <version>{VERSION}</version>
+    <vqmver required="true">2.4.0</vqmver>
+    <author>{AUTHOR}</author>
+    <code>{MOD}</code>
+    <link>http://opencartadmin.com</link>
+
+<file path="system/library/response.php" error="skip">
+   <operation error="skip">
+        <search position="before"><![CDATA[if ($this->output)]]></search>
+        <add position="before"><![CDATA[
+
+		if ($this->output && is_object($this->httpsfix_registry)) {
+			$this->httpsfix_registry->get('controller_httpsfix_httpsfix')->httpsfix_construct($this->output);
+        	$this->output = $this->httpsfix_registry->get('controller_httpsfix_httpsfix')->httpsfix_minify();
+        	$this->output = $this->httpsfix_registry->get('controller_httpsfix_httpsfix')->index();
+        }
+
+    ]]></add>
+    </operation>
+    <operation error="skip">
+        <search position="after"><![CDATA[private $output;]]></search>
+        <add position="after"><![CDATA[
+	//SEO HTTPS FIX PRO vars
+	private $httpsfix_registry = Array();
+	//End of SEO HTTPS FIX PRO vars
+    ]]></add>
+    </operation>
+    <operation error="skip">
+        <search position="before"><![CDATA[public function addHeader]]></search>
+        <add position="before"><![CDATA[
+ 	public function httpsfix_setRegistry($registry) {
+		$this->httpsfix_registry = $registry;
+	}
+    ]]></add>
+    </operation>
+</file>
+<file path="catalog/controller/common/maintenance.php" error="skip">
+    <operation error="skip">
+        <search regex="true" position="replace"><![CDATA[~(.*?)function index[(](.*?)\{~]]></search>
+        <add position="replace"><![CDATA[
+$1function index($2{
+        if (is_callable(array('Response', 'httpsfix_setRegistry'))) {
+
+			$httpsfix_cont = 'httpsfix/httpsfix';
+			$httpsfix_file  = DIR_APPLICATION . 'controller/'.$httpsfix_cont.'.php';
+			if (file_exists($httpsfix_file)) {
+				$httpsfix_class = 'Controller' . preg_replace('/[^a-zA-Z0-9]/', '', $httpsfix_cont);
+				include_once($httpsfix_file);
+				$this->registry->set('controller_' . str_replace('/', '_', $httpsfix_cont), new $httpsfix_class($this->registry));
+	        }
+	       	$this->response->httpsfix_setRegistry($this->registry);
+        }
+    ]]></add>
+    </operation>
+</file>
+<file path="catalog/controller/startup/maintenance.php" error="skip">
+    <operation error="skip">
+        <search regex="true" position="replace"><![CDATA[~(.*?)function index[(](.*?)\{~]]></search>
+        <add position="replace"><![CDATA[
+$1function index($2{
+        if (is_callable(array('Response', 'httpsfix_setRegistry'))) {
+
+			$httpsfix_cont = 'httpsfix/httpsfix';
+			$httpsfix_file  = DIR_APPLICATION . 'controller/'.$httpsfix_cont.'.php';
+			if (file_exists($httpsfix_file)) {
+				$httpsfix_class = 'Controller' . preg_replace('/[^a-zA-Z0-9]/', '', $httpsfix_cont);
+				include_once($httpsfix_file);
+				$this->registry->set('controller_' . str_replace('/', '_', $httpsfix_cont), new $httpsfix_class($this->registry));
+	        }
+	       	$this->response->httpsfix_setRegistry($this->registry);
+        }
+
+    ]]></add>
+    </operation>
+</file>
+<file path="catalog/controller/feed/*" error="skip">
+    <operation error="skip">
+        <search regex="true" position="replace"><![CDATA[~(.*?)function index[(](.*?)\{~]]></search>
+        <add position="replace"><![CDATA[
+$1function index($2{
+        $settings_httpsfix = $this->config->get('settings_httpsfix');
+        $settings_httpsfix['httpsfix_sitemap_work'] = true;
+        if (is_callable(array('Response', 'httpsfix_setRegistry'))) {
+
+			$httpsfix_cont = 'httpsfix/httpsfix';
+			$httpsfix_file  = DIR_APPLICATION . 'controller/'.$httpsfix_cont.'.php';
+			if (file_exists($httpsfix_file)) {
+				$httpsfix_class = 'Controller' . preg_replace('/[^a-zA-Z0-9]/', '', $httpsfix_cont);
+				include_once($httpsfix_file);
+				$this->registry->set('controller_' . str_replace('/', '_', $httpsfix_cont), new $httpsfix_class($this->registry));
+	        }
+	       	$this->response->httpsfix_setRegistry($this->registry);
+        }
+
+    ]]></add>
+    </operation>
+</file>
+<file path="catalog/controller/record/google_sitemap_blog.php" error="skip">
+	<operation error="skip">
+		<ignoreif><![CDATA[$cache = new sitemapCache()]]></ignoreif>
+		<search position="before"><![CDATA[$output = $this->get_sitemap_content()]]></search>
+        <add position="before"><![CDATA[
+        $settings_httpsfix = $this->config->get('settings_httpsfix');
+        $settings_httpsfix['httpsfix_sitemap_work'] = true;
+        if (is_callable(array('Response', 'httpsfix_setRegistry'))) {
+
+			$httpsfix_cont = 'httpsfix/httpsfix';
+			$httpsfix_file  = DIR_APPLICATION . 'controller/'.$httpsfix_cont.'.php';
+			if (file_exists($httpsfix_file)) {
+				$httpsfix_class = 'Controller' . preg_replace('/[^a-zA-Z0-9]/', '', $httpsfix_cont);
+				include_once($httpsfix_file);
+				$this->registry->set('controller_' . str_replace('/', '_', $httpsfix_cont), new $httpsfix_class($this->registry));
+	        }
+	       	$this->response->httpsfix_setRegistry($this->registry);
+        }
+
+    ]]></add>
+    </operation>
+	<operation error="skip">
+		<ignoreif><![CDATA[$output = $this->get_sitemap_content()]]></ignoreif>
+		<search position="before"><![CDATA[$cache = new sitemapCache()]]></search>
+        <add position="before"><![CDATA[
+        $settings_httpsfix = $this->config->get('settings_httpsfix');
+        $settings_httpsfix['httpsfix_sitemap_work'] = true;
+        if (is_callable(array('Response', 'httpsfix_setRegistry'))) {
+
+			$httpsfix_cont = 'httpsfix/httpsfix';
+			$httpsfix_file  = DIR_APPLICATION . 'controller/'.$httpsfix_cont.'.php';
+			if (file_exists($httpsfix_file)) {
+				$httpsfix_class = 'Controller' . preg_replace('/[^a-zA-Z0-9]/', '', $httpsfix_cont);
+				include_once($httpsfix_file);
+				$this->registry->set('controller_' . str_replace('/', '_', $httpsfix_cont), new $httpsfix_class($this->registry));
+	        }
+	       	$this->response->httpsfix_setRegistry($this->registry);
+        }
+
+    ]]></add>
+    </operation>
+</file>
+<file path="catalog/controller/feed/google_sitemap.php" error="skip">
+	<operation error="skip">
+    <ignoreif><![CDATA[$settings_httpsfix['httpsfix_sitemap_work'] = true;]]></ignoreif>
+		<search regex="true" position="replace"><![CDATA[~(.*?)function index[(](.*?)\{~]]></search>
+        <add position="replace"><![CDATA[
+$1function index($2{
+        $settings_httpsfix = $this->config->get('settings_httpsfix');
+        $settings_httpsfix['httpsfix_sitemap_work'] = true;
+        if (is_callable(array('Response', 'httpsfix_setRegistry'))) {
+
+			$httpsfix_cont = 'httpsfix/httpsfix';
+			$httpsfix_file  = DIR_APPLICATION . 'controller/'.$httpsfix_cont.'.php';
+			if (file_exists($httpsfix_file)) {
+				$httpsfix_class = 'Controller' . preg_replace('/[^a-zA-Z0-9]/', '', $httpsfix_cont);
+				include_once($httpsfix_file);
+				$this->registry->set('controller_' . str_replace('/', '_', $httpsfix_cont), new $httpsfix_class($this->registry));
+	        }
+	       	$this->response->httpsfix_setRegistry($this->registry);
+        }
+
+    ]]></add>
+    </operation>
+</file>
+<file path="catalog/controller/extension/feed/*" error="skip">
+    <operation error="skip">
+        <search regex="true" position="replace"><![CDATA[~(.*?)function index[(](.*?)\{~]]></search>
+        <add position="replace"><![CDATA[
+$1function index($2{
+        $settings_httpsfix = $this->config->get('settings_httpsfix');
+        $settings_httpsfix['httpsfix_sitemap_work'] = true;
+        if (is_callable(array('Response', 'httpsfix_setRegistry'))) {
+
+			$httpsfix_cont = 'httpsfix/httpsfix';
+			$httpsfix_file  = DIR_APPLICATION . 'controller/'.$httpsfix_cont.'.php';
+			if (file_exists($httpsfix_file)) {
+				$httpsfix_class = 'Controller' . preg_replace('/[^a-zA-Z0-9]/', '', $httpsfix_cont);
+				include_once($httpsfix_file);
+				$this->registry->set('controller_' . str_replace('/', '_', $httpsfix_cont), new $httpsfix_class($this->registry));
+	        }
+	       	$this->response->httpsfix_setRegistry($this->registry);
+        }
+
+
+    ]]></add>
+    </operation>
+</file>
+<file path="admin/controller/common/header.php" error="skip">
+    <operation error="skip">
+        <search regex="true" position="replace"><![CDATA[~(.*?)function index[(](.*?)\{~]]></search>
+        <add position="replace"><![CDATA[
+$1function index($2{
+        if (is_callable(array('Response', 'httpsfix_setRegistry'))) {
+
+			$httpsfix_cont = 'httpsfix/httpsfix';
+			$httpsfix_file  = DIR_CATALOG . 'controller/'.$httpsfix_cont.'.php';
+			if (file_exists($httpsfix_file)) {
+				$httpsfix_class = 'Controller' . preg_replace('/[^a-zA-Z0-9]/', '', $httpsfix_cont);
+				include_once($httpsfix_file);
+				$this->registry->set('controller_' . str_replace('/', '_', $httpsfix_cont), new $httpsfix_class($this->registry));
+	        }
+	       	$this->response->httpsfix_setRegistry($this->registry);
+        }
+
+
+    ]]></add>
+    </operation>
+</file>
+<file path="admin/controller/common/column_left.php" error="skip">
+    <operation error="skip">
+        <search regex="true" position="replace"><![CDATA[~(.*?)function index[(](.*?)\{~]]></search>
+        <add position="replace"><![CDATA[
+$1function index($2{
+		if (!defined('SC_VERSION')) define('SC_VERSION', (int)substr(str_replace('.','', VERSION), 0,2));
+		if (SC_VERSION > 23) {
+	        $token_name = 'user_token';
+        } else {
+        	$token_name = 'token';
+        }
+        $this->language->load('module/httpsfix');
+        $data['httpsfix_version_model'] = $this->language->get('httpsfix_version_model');
+        $data['text_httpsfix_about'] = $this->language->get('text_httpsfix_about');
+
+		$data['entry_httpsfix_admin_menu_ocmod'] = $this->language->get('entry_httpsfix_admin_menu_ocmod');
+		$data['entry_httpsfix_admin_menu_cache'] = $this->language->get('entry_httpsfix_admin_menu_cache');
+		$data['entry_httpsfix_admin_menu_cache_image'] = $this->language->get('entry_httpsfix_admin_menu_cache_image');
+		$data['text_ocmod_refresh_success'] = $this->language->get('text_ocmod_refresh_success');
+        $data['text_ocmod_refresh_fail'] = $this->language->get('text_ocmod_refresh_fail');
+        $data['text_loading_main'] = $this->language->get('text_loading_main');
+
+        $data['httpsfix_version_model_url'] = $this->url->link('module/httpsfix', $token_name .'=' . $this->session->data[$token_name], 'SSL');
+
+        $data['url_ocmod_refresh'] = $this->url->link('extension/modification/refresh', $token_name .'=' . $this->session->data[$token_name], 'SSL');
+        $data['url_cache_remove'] = $this->url->link('module/httpsfix/cacheremove', $token_name .'=' . $this->session->data[$token_name], 'SSL');
+        $data['url_cache_image_remove'] = $this->url->link('module/httpsfix/cacheremove', $token_name .'=' . $this->session->data[$token_name] . '&image=1' , 'SSL');
+
+        $data['settings_httpsfix'] = $this->config->get('settings_httpsfix');
+
+    ]]></add>
+    </operation>
+</file>
+<file path="admin/view/template/common/column_left.tpl" error="skip">
+    <operation error="skip">
+        <search position="before"><![CDATA[<nav id="column-left]]></search>
+        <add position="before"><![CDATA[
+<?php
+if (isset($settings_httpsfix['httpsfix_admin_menu_status']) && $settings_httpsfix['httpsfix_admin_menu_status']) {
+?>
+	<div id="httpsfix_admin_menu" style="display: none;">
+      <li id="httpsfix-menu"><a href="<?php echo $httpsfix_version_model_url; ?>" class="top"><i class="fa fa-asterisk fa-fw"></i><span><?php echo $httpsfix_version_model; ?></span></a>
+        <ul>
+        	<li><a href="<?php echo $httpsfix_version_model_url; ?>"><?php echo $httpsfix_version_model; ?></a></li>
+            <li><a href="#" id="httpsfix_ocmod_refresh" onclick="
+												$.ajax({
+													url: '<?php echo $url_ocmod_refresh; ?>',
+													dataType: 'html',
+													beforeSend: function()
+													{
+															$('.alert-success').remove();
+															$('#content > .container-fluid').prepend('<div class=\'alert alert-success\'><?php echo $text_loading_main; ?><\/div>')
+															$('.alert-success').show();
+
+													},
+													success: function(content) {
+														if (content) {
+															$('.alert-success').remove();
+															$('#content > .container-fluid').prepend('<div class=\'alert alert-success\'><\/div>')
+															$('.alert-success').append('<div style=\'color:green\'><?php echo $text_ocmod_refresh_success; ?><\/div>');
+															$('.alert-success').show();
+														}
+													},
+													error: function(content) {
+														$('.alert').html('<div style=\'color:red\'><?php echo $text_ocmod_refresh_fail; ?><\/div>');
+													}
+												}); return false;"><?php echo $entry_httpsfix_admin_menu_ocmod; ?></a></li>
+
+            <li><a href="#" id="httpsfix_cache_remove" onclick="
+												$.ajax({
+													url: '<?php echo $url_cache_remove; ?>',
+													dataType: 'html',
+													beforeSend: function()
+													{
+															$('.alert-success').remove();
+															$('#content > .container-fluid').prepend('<div class=\'alert alert-success\'><?php echo $text_loading_main; ?><\/div>')
+															$('.alert-success').show();
+
+													},
+													success: function(content) {
+														if (content) {
+															$('.alert-success').remove();
+															$('#content > .container-fluid').prepend('<div class=\'alert alert-success\'><\/div>')
+															$('.alert-success').append('<div style=\'color:green\'><?php echo $text_ocmod_refresh_success; ?><\/div>');
+															$('.alert-success').show();
+														}
+													},
+													error: function(content) {
+														$('.alert').html('<div style=\'color:red\'><?php echo $text_ocmod_refresh_fail; ?><\/div>');
+													}
+												}); return false;"><?php echo $entry_httpsfix_admin_menu_cache; ?></a></li>
+
+            <li><a href="#" id="httpsfix_cache_image_remove" onclick="
+												$.ajax({
+													url: '<?php echo $url_cache_image_remove; ?>',
+													dataType: 'html',
+													beforeSend: function()
+													{
+															$('.alert-success').remove();
+															$('#content > .container-fluid').prepend('<div class=\'alert alert-success\'><?php echo $text_loading_main; ?><\/div>')
+															$('.alert-success').show();
+
+													},
+													success: function(content) {
+														if (content) {
+															$('.alert-success').remove();
+															$('#content > .container-fluid').prepend('<div class=\'alert alert-success\'><\/div>')
+															$('.alert-success').append('<div style=\'color:green\'><?php echo $text_ocmod_refresh_success; ?><\/div>');
+															$('.alert-success').show();
+														}
+													},
+													error: function(content) {
+														$('.alert').html('<div style=\'color:red\'><?php echo $text_ocmod_refresh_fail; ?><\/div>');
+													}
+												}); return false;"><?php echo $entry_httpsfix_admin_menu_cache_image; ?></a></li>
+
+        	<li><a href="http://opencartadmin.com" style="word-wrap: normal;" target="_blank"><?php echo $text_httpsfix_about; ?></a></li>
+         </ul>
+      </li>
+	</div>
+	<script>
+		$(document).ready(function(){
+			var httpsfix_admin_menu = $('#httpsfix_admin_menu').html();
+			$('#menu').append(httpsfix_admin_menu);
+	        $('#httpsfix_admin_menu').remove();
+	        $('#menu > #httpsfix-menu > ul').css('width', '280px');
+        });
+	</script>
+<?php
+}
+?>
+    ]]></add>
+    </operation>
+</file>
+<file path="system/library/cache.php" error="skip">
+    <operation error="skip">
+        <search position="after"><![CDATA[class Cache {]]></search>
+        <add position="after"><![CDATA[
+private $httpsfix_ssl_protocol = 'agoo_http_';
+    ]]></add>
+    </operation>
+    <operation error="skip">
+        <search regex="true" position="replace"><![CDATA[~(.*?)function(.*?)[(][$]key(.*?)\{~]]></search>
+        <add position="replace"><![CDATA[
+$1function$2($key$3{
+		if (strpos($key, $this->httpsfix_ssl_protocol) === false) {
+			$key = $this->httpsfix_ssl_protocol.$key;
+		}
+    ]]></add>
+    </operation>
+    <operation error="skip">
+        <search regex="true" position="replace"><![CDATA[~public function __construct(.*?)\{~]]></search>
+        <add position="replace"><![CDATA[
+        public function __construct$1{
+		if ((isset($_SERVER['HTTPS']) && ($_SERVER['HTTPS'] == 'on' || $_SERVER['HTTPS'] == '1')) || (!empty($_SERVER['HTTP_X_FORWARDED_PROTO']) && (strtolower($_SERVER['HTTP_X_FORWARDED_PROTO']) == 'https') || (!empty($_SERVER['HTTP_X_FORWARDED_SSL']) && $_SERVER['HTTP_X_FORWARDED_SSL'] == 'on'))) {
+			$this->httpsfix_ssl_protocol = 'agoo_https_';
+		}
+
+    ]]></add>
+    </operation>
+    <operation>
+    	<ignoreif><![CDATA[__construct(]]></ignoreif>
+        <search position="before"><![CDATA[public function get(]]></search>
+        <add><![CDATA[
+        public function __construct() {
+			if ((isset($_SERVER['HTTPS']) && ($_SERVER['HTTPS'] == 'on' || $_SERVER['HTTPS'] == '1')) || (!empty($_SERVER['HTTP_X_FORWARDED_PROTO']) && (strtolower($_SERVER['HTTP_X_FORWARDED_PROTO']) == 'https') || (!empty($_SERVER['HTTP_X_FORWARDED_SSL']) && $_SERVER['HTTP_X_FORWARDED_SSL'] == 'on'))) {
+				$this->httpsfix_ssl_protocol = 'agoo_https_';
+			}
+		}
+    ]]></add>
+    </operation>
+</file>
+<file path="catalog/controller/startup/seo_url.php" error="skip">
+	<operation error="skip">
+        <search regex="true" position="replace"><![CDATA[~(.*?)redirect[(]HTTP_SERVER(.*?)[;]~]]></search>
+        <add position="replace"><![CDATA[
+//$1redirect(HTTP_SERVER$2;
+// 				Hey opencart-russia! This is shit code. How can that be? You thought when you wrote this? 3.14 crutches and rakes! ;)
+    ]]></add>
+	</operation>
+</file>
+<file path="catalog/controller/common/seo_url.php" error="skip">
+	<operation error="skip">
+        <search regex="true" position="replace"><![CDATA[~(.*?)redirect[(][$]arg(.*?)[;]~]]></search>
+        <add position="replace"><![CDATA[
+				if (isset($this->request->get['route']) && $this->request->get['route'] != 'common/home') {
+$1redirect($arg$2;
+				}
+// 				Hey opencart-russia! This is shit code. How can that be? You thought when you wrote this? 3.14 crutches and rakes! ;)
+    ]]></add>
+	</operation>
+</file>
+</modification>
