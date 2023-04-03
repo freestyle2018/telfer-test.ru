@@ -13,15 +13,15 @@ class ControllerStartupSeoPro extends Controller {
 					//$this->cache_data['keywords'][$row['query']] =@ $this->cache_data['keywords'][$row['keyword']];
 					//continue;
 				//}
-				
+
 				//$row['query']
 				//у этого значения надо выделить category_id
-				
+
 				if(preg_match('/^category_id=/', $row['query'])){
 					$id_category = substr($row['query'], 12);
 					$query = $this->db->query("SELECT parent_id FROM `" . DB_PREFIX . "category` WHERE `category_id` = ".$id_category);
 					$parent_id_cache = $query->row['parent_id'];
-					
+
 					$this->cache_data['keywords'][$row['keyword']."_".$parent_id_cache] = $row['query'];
 					$this->cache_data['queries'][$row['query']] = $row['keyword'];
 				}
@@ -29,7 +29,7 @@ class ControllerStartupSeoPro extends Controller {
 					$this->cache_data['keywords'][$row['keyword']] = $row['query'];
 					$this->cache_data['queries'][$row['query']] = $row['keyword'];
 				}
-				
+
 			}
 			$this->cache->set('seo_pro', $this->cache_data);
 		}
@@ -49,78 +49,48 @@ class ControllerStartupSeoPro extends Controller {
 			$this->validate();
 		} else {
 			$route_ = $route = $this->request->get['_route_'];
-			
-			/////////////
-			//echo "route = ".$this->request->get['_route_']."<br>\r\n";
-			
+
 			unset($this->request->get['_route_']);
 			$parts = explode('/', trim(utf8_strtolower($route), '/'));
 			list($last_part) = explode('.', array_pop($parts));
 			array_push($parts, $last_part);
-			
-			
-			/////////////
-			//echo "parts = ".print_r($parts)."<br><br><br><br><br>\r\n";
-			//print_r($this->cache_data['keywords'])."<br><br><br><br><br>\r\n";
-			
-			
-			
-			
-			
-			
-			
-			
+
+
+
 			//Надо определить продукт это или категория
-			
 			$end_parts = $parts[sizeof($parts)-1];
 			$end_url =@ $this->cache_data['keywords'][$end_parts];
-			
-			
-			//echo "PROVERKA = ".$end_url."<br><br><br><br><br>\r\n";
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
+
+
+
 			if(preg_match('/product_id=/', $end_url)){
 				$i = 1;
 				$ids_category = array();
 				$category     = array();
 				$parent_id    = array();
 				foreach ($parts as $key) {
-					
+
 					if($i == sizeof($parts)){
-						
+
 					}
 					else if($i == 1){
 						$sql = "SELECT SUBSTRING(`query`, 13) AS category_id FROM " . DB_PREFIX . "url_alias WHERE keyword = '".$key."'";
 						$query = $this->db->query($sql);
 						$parent_id[$i] = $query->row['category_id'];
-						
+
 						$ids_category[$key] = 0;
 						$parent_id[$i] = $query->row['category_id'];
 					}
-					
+
 					else {
 						$sql = "SELECT category_id FROM oc_category WHERE parent_id = ".$parent_id[$i-1]." AND category_id IN (SELECT SUBSTRING(`query`, 13) AS category_id FROM " . DB_PREFIX . "url_alias WHERE keyword = '".$key."')";
-						
+
 						$query = $this->db->query($sql);
 						$parent_id[$i] = $query->row['category_id'];
 					}
-					
-					
-					
+
+
+
 					if($i == sizeof($parts)){
 						$ids_category[$key] = "";
 					}
@@ -130,13 +100,13 @@ class ControllerStartupSeoPro extends Controller {
 					else{
 						$ids_category[$key] = "_".$parent_id[$i-1];
 					}
-					
-					
+
+
 					$i = $i + 1;
-					
+
 				}
-				
-				
+
+
 				$rows = array();
 				foreach ($parts as $keyword) {
 					if (isset($this->cache_data['keywords'][$keyword.$ids_category[$keyword]])) {
@@ -150,44 +120,43 @@ class ControllerStartupSeoPro extends Controller {
 				$category     = array();
 				$parent_id    = array();
 				foreach ($parts as $key) {
-					
+
 					if($i == 1){
 						$sql = "SELECT SUBSTRING(`query`, 13) AS category_id FROM " . DB_PREFIX . "url_alias WHERE keyword = '".$key."'";
 						$query = $this->db->query($sql);
-						$parent_id[$i] = $query->row['category_id'];
-						
+
 						$ids_category[$key] = 0;
-						$parent_id[$i] = $query->row['category_id'];
+						$parent_id[$i] =@ $query->row['category_id'];
 					}
 					else {
-						
+
 						//echo "key = ".$key."\r\n";
-						
+
 						if($key != "categories" && $key != "information" && $key != "main" && $key != "manufacturers" && $key != "products"){
 							$sql = "SELECT category_id FROM oc_category WHERE parent_id = ".$parent_id[$i-1]." AND category_id IN (SELECT SUBSTRING(`query`, 13) AS category_id FROM " . DB_PREFIX . "url_alias WHERE keyword = '".$key."')";
-							
+
 							$query = $this->db->query($sql);
 							$parent_id[$i] = $query->row['category_id'];
 						}
-						
-						
-						
+
+
+
 					}
-					
-					
-					
+
+
+
 					if($i == 1){
 						$ids_category[$key] = "_0";
 					}
 					else{
 						$ids_category[$key] = "_".$parent_id[$i-1];
 					}
-					
-					
+
+
 					$i = $i + 1;
-					
+
 				}
-				
+
 				$rows = array();
 				foreach ($parts as $keyword) {
 					if (isset($this->cache_data['keywords'][$keyword.$ids_category[$keyword]])) {
@@ -195,75 +164,43 @@ class ControllerStartupSeoPro extends Controller {
 					}
 				}
 			}
-			
-			
-			
-			
-			
-			
-			
-			/////////////
-			//echo "XXXXXXXXXXXXXXXXXXXXXX = ";
-			//print_r($rows)."<br><br><br><br><br>\r\n";
-			/*
+
+
+			// берем данные из кеш
 			if (isset($this->cache_data['keywords'][$route])){
 				$keyword = $route;
 				$parts = array($keyword);
 				$rows = array(array('keyword' => $keyword, 'query' => $this->cache_data['keywords'][$keyword]));
 			}
-			*/
-			
-			
-			
-			
-			/*
-			$rows = array();
-			foreach ($parts as $keyword) {
-				if (isset($this->cache_data['keywords'][$keyword])) {
-					$rows[] = array('keyword' => $keyword, 'query' => $this->cache_data['keywords'][$keyword]);
+
+
+
+			// это не категории и не maps
+			if (!isset($this->cache_data['keywords'][$keyword.$ids_category[$keyword]]) && $key != "categories" && $key != "information" && $key != "main" && $key != "manufacturers" && $key != "products") {
+				$rows = array();
+				foreach ($parts as $keyword) {
+					if (isset($this->cache_data['keywords'][$keyword])) {
+						$rows[] = array('keyword' => $keyword, 'query' => $this->cache_data['keywords'][$keyword]);
+					}
 				}
 			}
-			
-			$this->cache_data['query'][$keyword]
-			*/
-			
-			
-			
-			
-			/////////////
-			//echo "XXXXXXXXXXXXXXXXXXXXXX = ";
-			//print_r($rows)."<br><br><br><br><br>\r\n";
+
+
 
 			if (count($rows) == sizeof($parts)) {
 				$queries = array();
 				foreach ($rows as $row) {
 					$queries[utf8_strtolower($row['keyword'])] = $row['query'];
-					//$queries[utf8_strtolower($row['query'])] = $row['keyword'];
 				}
-				
-				//echo "ZZZZZZZZZZZZZZZZZZZZZZ = ";
-				//print_r($queries)."<br><br><br><br><br>\r\n";
 
 				reset($parts);
 				foreach ($parts as $part) {
-					
-					
-					//if(preg_match('/category_id=/', $end_url)){
-						if(!isset($queries[$part.$ids_category[$part]])) return false;
+					if(isset($queries[$part.$ids_category[$part]])){
 						$url = explode('=', $queries[$part.$ids_category[$part]], 2);
-					//}
-					//else{
-						//if(!isset($queries[$part])) return false;
-						//$url = explode('=', $queries[$part], 2);
-					//}
-					
-					
-					
-					
-					
-					
-					
-					
+					}
+					else{
+						$url = explode('=', $queries[$part], 2);
+					}
 
 					if ($url[0] == 'category_id') {
 						if (!isset($this->request->get['path'])) {
@@ -278,6 +215,7 @@ class ControllerStartupSeoPro extends Controller {
 			} else {
 				$this->request->get['route'] = 'error/not_found';
 			}
+
 
 			if (isset($this->request->get['product_id'])) {
 				$this->request->get['route'] = 'product/product';
@@ -312,8 +250,6 @@ class ControllerStartupSeoPro extends Controller {
 		if (!$this->config->get('config_seo_url')) return $link;
 
 		$seo_url = '';
-		
-		////echo "link = $link<br>\r\n";
 
 		$component = parse_url(str_replace('&amp;', '&', $link));
 
@@ -322,8 +258,6 @@ class ControllerStartupSeoPro extends Controller {
 
 		$route = $data['route'];
 		unset($data['route']);
-		
-		////echo "route = $route<br>\r\n";
 
 		switch ($route) {
 			case 'product/product':
@@ -349,9 +283,9 @@ class ControllerStartupSeoPro extends Controller {
 				if (isset($data['path'])) {
 					$category = explode('_', $data['path']);
 					$category = end($category);
-					
+
 					////echo "category = $category<br>\r\n";
-					
+
 					$data['path'] = $this->getPathByCategory($category);
 					if (!$data['path']) return $link;
 					//return $link;
@@ -453,16 +387,16 @@ class ControllerStartupSeoPro extends Controller {
 		}
 
 		////print_r($seo_url);
-		
+
 		return $seo_url;
 	}
 
 	private function getPathByProduct($product_id) {
 		$product_id = (int)$product_id;
 		if ($product_id < 1) return false;
-			
-		
-		
+
+
+
 		static $path = null;
 		if (!isset($path)) {
 			$path = $this->cache->get('product.seopath');
@@ -504,16 +438,10 @@ class ControllerStartupSeoPro extends Controller {
 			$sql .= " WHERE t0.category_id = '" . $category_id . "'";
 
 			$query = $this->db->query($sql);
-
-			//$path[$category_id] = $query->num_rows ? $query->row['path'] : false;
-			
 			$path[$category_id] = $query->row['path'];
-			////echo "path = ".//print_r($path)."<br>\r\n";
 
 			$this->cache->set('category.seopath', $path);
 		}
-		
-		////echo "path = ".//print_r($path)."<br>";
 
 		return $path[$category_id];
 	}
