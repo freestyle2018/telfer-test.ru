@@ -8,6 +8,8 @@ class ControllerProductManufacturer extends Controller {
 		$this->load->model('tool/image');
 
 		$this->document->setTitle($this->language->get('heading_title'));
+		$this->document->setDescription($this->language->get('description'));
+		$this->document->setKeywords($this->language->get('keywords'));
 
 		$data['heading_title'] = $this->language->get('heading_title');
 

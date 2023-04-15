@@ -4,6 +4,8 @@ class ControllerCheckoutCart extends Controller {
 		$this->load->language('checkout/cart');
 
 		$this->document->setTitle($this->language->get('heading_title'));
+		$this->document->setDescription($this->language->get('description'));
+		$this->document->setKeywords($this->language->get('keywords'));
 
 		$data['breadcrumbs'] = array();
 
@@ -118,7 +120,7 @@ class ControllerCheckoutCart extends Controller {
 				// Display prices
 				if ($this->customer->isLogged() || !$this->config->get('config_customer_price')) {
 					$unit_price = $this->tax->calculate($product['price'], $product['tax_class_id'], $this->config->get('config_tax'));
-					
+
 					$price = $this->currency->format($unit_price, $this->session->data['currency']);
 					$total = $this->currency->format($unit_price * $product['quantity'], $this->session->data['currency']);
 				} else {
@@ -184,14 +186,14 @@ class ControllerCheckoutCart extends Controller {
 			$totals = array();
 			$taxes = $this->cart->getTaxes();
 			$total = 0;
-			
-			// Because __call can not keep var references so we put them into an array. 			
+
+			// Because __call can not keep var references so we put them into an array.
 			$total_data = array(
 				'totals' => &$totals,
 				'taxes'  => &$taxes,
 				'total'  => &$total
 			);
-			
+
 			// Display prices
 			if ($this->customer->isLogged() || !$this->config->get('config_customer_price')) {
 				$sort_order = array();
@@ -207,7 +209,7 @@ class ControllerCheckoutCart extends Controller {
 				foreach ($results as $result) {
 					if ($this->config->get($result['code'] . '_status')) {
 						$this->load->model('extension/total/' . $result['code']);
-						
+
 						// We have to put the totals in an array so that they pass by reference.
 						$this->{'model_extension_total_' . $result['code']}->getTotal($total_data);
 					}
@@ -238,13 +240,13 @@ class ControllerCheckoutCart extends Controller {
 			$this->load->model('extension/extension');
 
 			$data['modules'] = array();
-			
+
 			$files = glob(DIR_APPLICATION . '/controller/extension/total/*.php');
 
 			if ($files) {
 				foreach ($files as $file) {
 					$result = $this->load->controller('extension/total/' . basename($file, '.php'));
-					
+
 					if ($result) {
 						$data['modules'][] = $result;
 					}
@@ -354,8 +356,8 @@ class ControllerCheckoutCart extends Controller {
 				$totals = array();
 				$taxes = $this->cart->getTaxes();
 				$total = 0;
-		
-				// Because __call can not keep var references so we put them into an array. 			
+
+				// Because __call can not keep var references so we put them into an array.
 				$total_data = array(
 					'totals' => &$totals,
 					'taxes'  => &$taxes,
@@ -454,7 +456,7 @@ class ControllerCheckoutCart extends Controller {
 			$taxes = $this->cart->getTaxes();
 			$total = 0;
 
-			// Because __call can not keep var references so we put them into an array. 			
+			// Because __call can not keep var references so we put them into an array.
 			$total_data = array(
 				'totals' => &$totals,
 				'taxes'  => &$taxes,

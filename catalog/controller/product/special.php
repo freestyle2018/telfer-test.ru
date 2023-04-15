@@ -32,6 +32,8 @@ class ControllerProductSpecial extends Controller {
 		}
 
 		$this->document->setTitle($this->language->get('heading_title'));
+		$this->document->setDescription($this->language->get('description'));
+		$this->document->setKeywords($this->language->get('keywords'));
 
 		$data['breadcrumbs'] = array();
 

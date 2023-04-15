@@ -6,6 +6,8 @@ class ControllerAccountVoucher extends Controller {
 		$this->load->language('account/voucher');
 
 		$this->document->setTitle($this->language->get('heading_title'));
+		$this->document->setDescription($this->language->get('description'));
+		$this->document->setKeywords($this->language->get('keywords'));
 
 		if (!isset($this->session->data['vouchers'])) {
 			$this->session->data['vouchers'] = array();

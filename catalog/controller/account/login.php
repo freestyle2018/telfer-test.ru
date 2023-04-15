@@ -48,6 +48,8 @@ class ControllerAccountLogin extends Controller {
 		$this->load->language('account/login');
 
 		$this->document->setTitle($this->language->get('heading_title'));
+		$this->document->setDescription($this->language->get('description'));
+		$this->document->setKeywords($this->language->get('keywords'));
 
 		if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validate()) {
 			// Unset guest
