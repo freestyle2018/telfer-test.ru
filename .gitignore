@@ -28,6 +28,7 @@ system/storage/logs/*
 
 # Session Files
 system/storage/session/*
+system/library/light/lightcheckout.php
 !system/storage/session/index.html
 
 # Upload Files
@@ -40,3 +41,4 @@ system/storage*
 # IDE Project
 /.idea
 .idea
+

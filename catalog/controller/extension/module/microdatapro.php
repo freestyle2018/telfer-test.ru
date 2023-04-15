@@ -5,17 +5,17 @@ require_once(DIR_SYSTEM . 'library/microdatapro.php');
 class ControllerExtensionModuleMicrodataPro extends Controller {
 
 	protected $data;
-	
+
 	public function index() {
 		$a=$b=$c=$d=1;
 		$date_install = '2017-02-01';
-	  $this->microdatapro = new Microdatapro($this->registry);	
+	  $this->microdatapro = new Microdatapro($this->registry);
 
 	  if(isset($this->request->get['route']) && !empty($this->request->get['route'])){
 		$route = $this->request->get['route'];
 	  }else{
 		$route = "common/home";
-	  }	
+	  }
 
 	  $this->data['glob_route'] = $route;
 
@@ -28,7 +28,7 @@ class ControllerExtensionModuleMicrodataPro extends Controller {
 	  $this->data['status'] = $status = $s = $this->config->get('config_microdata_status');
 		$this->data['activated'] =$a= 1;
 
-	
+
 		if(($route == "common/home" || $route == "product/product" || $route == "product/category" || $route == "product/manufacturer/info" || $route == "information/information" || $route == "product/special")&&$b){
 
 			if (isset($this->request->server['HTTPS']) && (($this->request->server['HTTPS'] == 'on') || ($this->request->server['HTTPS'] == '1'))) {
@@ -46,45 +46,45 @@ class ControllerExtensionModuleMicrodataPro extends Controller {
 			$this->load->model('catalog/category');
 			$this->load->model('catalog/manufacturer');
 			$this->language->load('product/special');
-			
+
 		//pages
-			$this->data['microdata_route_product']  	= ($route == "product/product")?true:false;																		
+			$this->data['microdata_route_product']  	= ($route == "product/product")?true:false;
 			$this->data['microdata_route_category'] 	= ($route == "product/category")?true:false;
 			$this->data['microdata_route_manufacturer'] = ($route == "product/manufacturer/info")?true:false;
 			$this->data['microdata_route_information']  = ($route == "information/information")?true:false;
-			$this->data['microdata_route_special'] 	    = ($route == "product/special")?true:false;			
+			$this->data['microdata_route_special'] 	    = ($route == "product/special")?true:false;
 
-		//setting	
+		//setting
 			$page_set = explode('/', $route);
 			$this->data['config_item_breadcrumb'] = $this->config->get('config_'.$page_set[1].'_breadcrumb');
-			$this->data['config_item_syntax']     = $this->config->get('config_'.$page_set[1].'_syntax');			
-			
+			$this->data['config_item_syntax']     = $this->config->get('config_'.$page_set[1].'_syntax');
+
 		//config view pages
 			$this->data['config_product_page'] 	    	= $this->config->get('config_product_page');
 			$this->data['config_category_page'] 	    = $this->config->get('config_category_page');
 			$this->data['config_manufacturer_page'] 	= $this->config->get('config_manufacturer_page');
 			$this->data['config_special_page'] 	    	= $this->config->get('config_special_page');
-			$this->data['config_information_page'] 		= $this->config->get('config_information_page');			
+			$this->data['config_information_page'] 		= $this->config->get('config_information_page');
 			$this->data['config_company_syntax']     	= $this->config->get('config_company_syntax');
-			
+
 		//config view blocks
 			$this->data['config_product_related'] 		= $this->config->get('config_product_related');
 			$this->data['config_product_reviews'] 		= $this->config->get('config_product_reviews');
 			$this->data['config_product_attribute'] 	= $this->config->get('config_product_attribute');
 			$this->data['config_company'] 	    		= $this->config->get('config_company');
-			
+
 			$this->data['microdata_version'] 	    	= '1';
 
 		//company data
 			if($this->microdatapro->opencart_version(0) == 2){
-				$this->data['microdata_code'] = $a?$this->session->data['currency']:''; 
+				$this->data['microdata_code'] = $a?$this->session->data['currency']:'';
 			}else{
 				$this->data['microdata_code'] = $b?$this->currency->getCode():'';
 			}
 
 			$this->data['microdata_base_url']  = $this->data['microdata_url'] = $microdata_server;
 			$this->data['microdata_name']      = $this->data['microdata_heading_title'] = $this->config->get('config_name');
-			$this->data['microdata_email']     = ($this->config->get('config_microdata_email'))?$this->config->get('config_microdata_email'):$this->config->get('config_email');																								
+			$this->data['microdata_email']     = ($this->config->get('config_microdata_email'))?$this->config->get('config_microdata_email'):$this->config->get('config_email');
 			$this->data['microdata_logo']      = $this->data['microdata_base_url'] . "image/" . str_replace(' ', '%20', $this->config->get('config_logo'));
 			$this->data['microdata_popup']	   = $this->data['microdata_original_image'] = $this->data['microdata_logo'];
 			$this->data['microdata_address_1'] = $this->config->get('config_microdata_address_1');
@@ -97,7 +97,7 @@ class ControllerExtensionModuleMicrodataPro extends Controller {
 				$this->data['company_show_rating'] = false;
 			}
 			$this->data['company_meta_description'] = $this->data['microdata_description'] = $this->microdatapro->clear($this->config->get('config_meta_description'));
-		
+
 		//social groups
 			if($this->config->get('config_microdata_groups')){
 				$microdata_groups = explode(",", $this->config->get('config_microdata_groups'));
@@ -106,7 +106,7 @@ class ControllerExtensionModuleMicrodataPro extends Controller {
 			}else{
 				$this->data['microdata_groups'] = false;
 			}
-			
+
 		//telephones
 			if($this->config->get('config_microdata_phones')){
 				$microdata_phones = explode(",", $this->config->get('config_microdata_phones'));
@@ -114,7 +114,7 @@ class ControllerExtensionModuleMicrodataPro extends Controller {
 				$this->data['microdata_phones'] = array_diff($microdata_phones, array(''));
 			}else{
 				$this->data['microdata_phones'] = false;
-			}	
+			}
 
 		//multistore
 			$store_id = false;
@@ -124,7 +124,7 @@ class ControllerExtensionModuleMicrodataPro extends Controller {
 					$store_id = $result['store_id'];
 				}
 			}
-			
+
 			if($store_id){
 				$this->data['microdata_email'] 	   = ($this->config->get('config_microdata_email'.$store_id))?$this->config->get('config_microdata_email'.$store_id):$this->data['microdata_email'];
 				$this->data['microdata_address_1'] = ($this->config->get('config_microdata_address_1'.$store_id))?$this->config->get('config_microdata_address_1'.$store_id):$this->data['microdata_address_1'];
@@ -136,21 +136,21 @@ class ControllerExtensionModuleMicrodataPro extends Controller {
 					$microdata_groups = array_map('trim',$microdata_groups);
 					$this->data['microdata_groups'] = array_diff($microdata_groups, array(''));
 				}
-				
+
 			//telephones for this store
 				if($this->config->get('config_microdata_phones'.$store_id)){
 					$microdata_phones = explode(",", $this->config->get('config_microdata_phones'.$store_id));
 					$microdata_phones = array_map('trim',$microdata_phones);
 					$this->data['microdata_phones'] = array_diff($microdata_phones, array(''));
-				}			
+				}
 			}
-			
+
 		//product
 			if($route == "product/product" && isset($this->request->get['product_id']) && $this->request->get['product_id'] != 0 && $a){
 
 				$product_id = $this->request->get['product_id'];
 				$this->data['product_info'] = $product_info = $this->microdatapro->clear_array($this->model_catalog_product->getProduct($a?$product_id:0));
-				
+
 				if($product_info){
 					$this->data['microdata_url'] = $this->url->link('product/product', 'product_id=' . $product_id);
 
@@ -158,7 +158,7 @@ class ControllerExtensionModuleMicrodataPro extends Controller {
 					$this->data['microdata_original_image'] = (isset($product_info['image']) and !empty($product_info['image']))?$product_info['image']:$this->config->get('config_logo');
 					if($this->microdatapro->opencart_version(0) == 2 && $this->microdatapro->opencart_version(1) >= 2){ //over 2.2
 						$ipw = $this->config->get($this->config->get('config_theme') . '_image_popup_width');
-						$iph = $this->config->get($this->config->get('config_theme') . '_image_popup_height');				
+						$iph = $this->config->get($this->config->get('config_theme') . '_image_popup_height');
 					}else{
 						$ipw = $this->config->get('config_image_product_width');
 						$iph = $this->config->get('config_image_product_height');
@@ -183,19 +183,19 @@ class ControllerExtensionModuleMicrodataPro extends Controller {
 					$this->data['microdata_isbn'] = @$this->config->get('config_microdata_isbn')?$product_info['isbn']:false;
 					$this->data['microdata_mpn'] = @$this->config->get('config_microdata_mpn')?$product_info['mpn']:false;
 					$this->data['microdata_sku'] = @$this->config->get('config_microdata_sku')?$product_info['sku']:false;
-					$strp = strip_tags(html_entity_decode($product_info['description']));
-					$this->data['microdata_description'] = @$this->microdatapro->clear(!empty($strp)?$product_info['description']:$this->config->get('config_microdata_product_description'), true);
+					$strp = strip_tags(html_entity_decode($product_info['meta_description']));
+					$this->data['microdata_description'] = @$this->microdatapro->clear(!empty($strp)?$product_info['meta_description']:$this->config->get('config_microdata_product_description'), true);
 
 					$this->data['echo'] = '';
 					if(empty($strp) and $d){
 						$this->data['echo'] = $this->data['microdata_description'];
 					}
-					
+
 					$this->data['microdata_reviews'] = array();
 					$this->data['microdata_review_total'] = 0;
 					if($this->config->get('config_review_status')){
 						$this->data['microdata_review_total'] = (int)$this->model_catalog_review->getTotalReviewsByProductId($product_id);
-					
+
 						$results = $this->model_catalog_review->getReviewsByProductId($product_id, $a?0:999, $b?9999:0);
 						$total_rating = 0;
 						foreach ($results as $result) {
@@ -216,7 +216,7 @@ class ControllerExtensionModuleMicrodataPro extends Controller {
 					}
 
 					$results = $this->model_catalog_product->getProductRelated($c?$product_id:0);
-					
+
 					$this->data['microdata_products_json'] = $this->products($results, 'json', true);
 					$this->data['microdata_products_microdata'] = $this->products($results, 'microdata', true);
 
@@ -224,41 +224,43 @@ class ControllerExtensionModuleMicrodataPro extends Controller {
 					foreach ($this->model_catalog_product->getProductAttributes($this->request->get['product_id']) as $attribute_group) {
 						foreach ($attribute_group['attribute'] as $attribute) {
 							$this->data['microdata_attribute_groups'][]['attribute'] = array($this->microdatapro->clear_array($attribute));
-						}	
+						}
 					}
 				}
-			}  
+			}
 
 		//category
 			if($route == "product/category" && isset($this->request->get['path']) && $this->request->get['path'] != 0 && $b){
-				$this->data['microdata_url'] = $this->url->link('product/category', 'path=' . $this->request->get['path']);			
-				
+				$this->data['microdata_url'] = $this->url->link('product/category', 'path=' . $this->request->get['path']);
+
 				$this->data['category_info'] = $category_info = $this->category_info();
+
+				//var_dump($category_info);
 
 				$this->data['breadcrumbs'] = $d?$this->breadcrumbs('category'):false;
 
-				$strp = strip_tags(html_entity_decode($category_info['description']));
-				$this->data['microdata_description'] = @$this->microdatapro->clear((isset($category_info['description']) and !empty($strp))?$category_info['description']:$this->config->get('config_microdata_category_description'), true);
+				$strp = strip_tags(html_entity_decode($category_info['meta_description']));
+				$this->data['microdata_description'] = @$this->microdatapro->clear((isset($category_info['meta_description']) and !empty($strp))?$category_info['meta_description']:$this->config->get('config_microdata_category_description'), true);
 
 				$this->data['echo'] = '';
 				if(empty($strp)){
 					$this->data['echo'] = $this->data['microdata_description'];
 				}
-				
+
 				$this->data['microdata_heading_title'] = isset($category_info['name'])?$this->microdatapro->clear($category_info['name']):'';
 				$this->data['microdata_original_image'] = (isset($category_info['image']) and !empty($category_info['image']))?$category_info['image']:$this->config->get('config_logo');
 				if($this->microdatapro->opencart_version(0) == 2 && $this->microdatapro->opencart_version(1) >= 2){ //over 2.2
 					$ipw = $this->config->get($this->config->get('config_theme') . '_image_category_width');
-					$iph = $this->config->get($this->config->get('config_theme') . '_image_category_height');			
+					$iph = $this->config->get($this->config->get('config_theme') . '_image_category_height');
 				}else{
 					$ipw = $this->config->get('config_image_category_width');
 					$iph = $this->config->get('config_image_category_height');
-				}		
+				}
 				$this->data['microdata_popup'] = $this->getImage($this->data['microdata_original_image'], $ipw, $iph);
 
 				$data = array(
 					'filter_category_id' => isset($category_info['category_id'])?$category_info['category_id']:0,
-					'filter_filter'      => isset($this->request->get['filter'])?$this->request->get['filter']:'', 
+					'filter_filter'      => isset($this->request->get['filter'])?$this->request->get['filter']:'',
 					'sort'               => isset($this->request->get['sort'])?$this->request->get['sort']:'p.sort_order',
 					'order'              => isset($this->request->get['order'])?$this->request->get['order']:'ASC',
 					'start'              => (isset($this->request->get['page'])?$this->request->get['page']:1 - 1) * (isset($this->request->get['limit'])?$this->request->get['limit']:$this->data['config_list_limit']),
@@ -272,45 +274,45 @@ class ControllerExtensionModuleMicrodataPro extends Controller {
 				$this->data['microdata_products_json'] = $this->products($results);
 
 				$this->data['microdata_products_json_cont'] = $b?count($results):777;
-				$this->data['microdata_products_microdata'] = $this->products($results, 'microdata');				
-				
+				$this->data['microdata_products_microdata'] = $this->products($results, 'microdata');
+
 				$this->data['min_max'] = $this->min_max($results, isset($category_info['category_id'])?$category_info['category_id']:0, 'category');
 			}
 
 		//manufacturer
 			if($route == "product/manufacturer/info" && $a && isset($this->request->get['manufacturer_id']) && $this->request->get['manufacturer_id'] != 0 && $c){
-				
+
 				$manufacturer_id = isset($this->request->get['manufacturer_id'])?(int)$this->request->get['manufacturer_id']:0;
-			
+
 				$manufacturer_info = $d?$this->microdatapro->clear_array($this->model_catalog_manufacturer->getManufacturer($manufacturer_id)):'error';
-			
+
 				$this->data['microdata_heading_title'] = isset($manufacturer_info['name'])?$manufacturer_info['name']:'';
-				$this->data['microdata_url'] = $this->url->link('product/manufacturer/info', 'manufacturer_id=' . $this->request->get['manufacturer_id']);			
+				$this->data['microdata_url'] = $this->url->link('product/manufacturer/info', 'manufacturer_id=' . $this->request->get['manufacturer_id']);
 				$this->data['microdata_original_image'] = (isset($manufacturer_info['image']) and !empty($manufacturer_info['image']))?$manufacturer_info['image']:$this->config->get('config_logo');
 				if($this->microdatapro->opencart_version(0) == 2 && $this->microdatapro->opencart_version(1) >= 2){ //over 2.2
 					$ipw = $this->config->get($this->config->get('config_theme') . '_image_category_width');
-					$iph = $this->config->get($this->config->get('config_theme') . '_image_category_height');			
+					$iph = $this->config->get($this->config->get('config_theme') . '_image_category_height');
 				}else{
 					$ipw = $this->config->get('config_image_category_width');
 					$iph = $this->config->get('config_image_category_height');
-				}				
+				}
 				$this->data['microdata_popup'] = $this->getImage($this->data['microdata_original_image'], $ipw, $iph);
-				
-				$this->data['breadcrumbs'] = $this->breadcrumbs('manufacturer', $manufacturer_info);				
+
+				$this->data['breadcrumbs'] = $this->breadcrumbs('manufacturer', $manufacturer_info);
 				$strp = strip_tags(html_entity_decode($manufacturer_info['description']));
 				if(isset($manufacturer_info['description']) && !empty($strp)){
 					$manufacturer_description = @$manufacturer_info['description'];
 				}else{
 					$manufacturer_description = $this->config->get('config_microdata_manufacturer_description');
-				}	
-					
+				}
+
 				$this->data['microdata_description'] = $a?$this->microdatapro->clear($manufacturer_description, true):'';
-				
+
 				$this->data['echo'] = '';
 				if(empty($strp)){
 					$this->data['echo'] = $this->data['microdata_description'];
-				}				
-				
+				}
+
 				$this->data['microdata_manufacturer_products'] = array();
 
 				$data = array(
@@ -320,24 +322,24 @@ class ControllerExtensionModuleMicrodataPro extends Controller {
 					'start'              => (isset($this->request->get['page'])?$this->request->get['page']:1 - 1) * (isset($this->request->get['limit'])?$this->request->get['limit']:$this->data['config_list_limit']),
 					'limit'              => isset($this->request->get['limit'])?$this->request->get['limit']:$this->data['config_list_limit']
 				);
-					
+
 				$results = $this->model_catalog_product->getProducts($data);
 
 				$this->data['microdata_products_json'] = $this->products($results);
-				$this->data['microdata_products_microdata'] = $this->products($results, 'microdata');	
-				
+				$this->data['microdata_products_microdata'] = $this->products($results, 'microdata');
+
 				$this->data['min_max'] = $this->min_max($results, $manufacturer_id, 'manufacturer');
-				
-			}			
-			
+
+			}
+
 		//specials
 			if($route == "product/special" && $d){
-			
-				$this->data['microdata_url'] = $this->url->link('product/special');			
-				
+
+				$this->data['microdata_url'] = $this->url->link('product/special');
+
 				$this->data['breadcrumbs'] = $this->breadcrumbs('special');
-					
-				$this->load->language('product/special');	
+
+				$this->load->language('product/special');
 				$this->data['microdata_heading_title'] = $this->microdatapro->clear($this->language->get('heading_title'));
 				$this->data['microdata_description'] = $this->microdatapro->clear($this->config->get('config_microdata_special_description'));
 				$this->data['microdata_image'] = $this->data['microdata_popup'] = $this->data['microdata_original_image'] = $microdata_server.'image/'.str_replace(' ', '%20', $this->config->get('config_logo'));
@@ -349,24 +351,24 @@ class ControllerExtensionModuleMicrodataPro extends Controller {
 					'start' => (isset($this->request->get['page'])?$this->request->get['page']:1 - 1) * (isset($this->request->get['limit'])?$this->request->get['limit']:$this->data['config_list_limit']),
 					'limit' => isset($this->request->get['limit'])?$this->request->get['limit']:$this->data['config_list_limit']
 				);
-	
+
 				$results = $this->model_catalog_product->getProductSpecials($data);
 
 				$this->data['microdata_products_json'] = $this->products($results);
-				$this->data['microdata_products_microdata'] = $this->products($results, 'microdata');	
+				$this->data['microdata_products_microdata'] = $this->products($results, 'microdata');
 
 				$this->data['min_max'] = $this->min_max($results, 0, 'special');
-			}			
-			
-		//information 
+			}
+
+		//information
 			if($route == "information/information" && isset($this->request->get['information_id']) && $a){
-			
+
 				$information_id = (int)$this->request->get['information_id'];
-				
+
 				$this->data['information_info'] = $information_info = $this->microdatapro->clear_array($this->model_catalog_information->getInformation($information_id));
-				
-				$this->data['microdata_url'] = $this->url->link('information/information', 'information_id=' .  $information_id);			
-				
+
+				$this->data['microdata_url'] = $this->url->link('information/information', 'information_id=' .  $information_id);
+
 				$this->data['breadcrumbs'] = $this->breadcrumbs('information', $information_info);
 
 				if (isset($information_info['seo_h1']) && !empty($information_info['seo_h1'])) {
@@ -376,45 +378,45 @@ class ControllerExtensionModuleMicrodataPro extends Controller {
 				}else{
 					$this->data['microdata_heading_title'] = '';
 				}
-				
+
 				$this->data['date_published'] = $date_install;
 
 				$this->data['author'] = $this->config->get('config_name');
 
 				$this->data['microdata_image'] = $this->data['microdata_popup'] = $this->data['microdata_original_image'] = $microdata_server.'image/'.str_replace(' ', '%20', $this->config->get('config_logo'));
-				
+
 				$information_image_size_array = @getimagesize(str_replace("https://","http://",$this->data['microdata_image']));
 				$this->data['image_width'] = isset($information_image_size_array[0])?$information_image_size_array[0]:'200';
 				$this->data['image_height'] = isset($information_image_size_array[1])?$information_image_size_array[1]:'200';
 
 				$this->data['microdata_description'] = @$this->microdatapro->clear(@$information_info['description'], true);
 				$this->data['microdata_og_type'] = 'article';
-			}				
+			}
 
 		//twitter cards and open graph
 			$this->data['microdata_twitter_status'] = false;
 			$this->data['microdata_opengraph_status'] = false;
-			
+
 			if($this->config->get('config_microdata_twitter_account')){
 				$this->data['microdata_twitter_status'] = true;
 				$this->load->model('tool/image');
 				$this->data['microdata_popup_tw'] = $this->model_tool_image->resize(str_replace(' ', '%20', $this->data['microdata_original_image']), 375, 375);
-			}	
-			
+			}
+
 			if($this->config->get('config_microdata_opengraph')){
 				$this->data['microdata_opengraph_status'] = true;
 				$this->data['microdata_popup'] = str_replace(' ', '%20', $this->data['microdata_popup']);
 			}
-		
+
 			if(!isset($this->data['microdata_og_type'])){
 				$this->data['microdata_og_type'] = 'website';
 			}
-			
-			$this->data['microdata_twitter_account'] = $this->config->get('config_microdata_twitter_account');		
-				
-			$this->data['microdata_description_shot'] = @$this->microdatapro->clear($this->mbCutString($this->data['microdata_description'], 290)); 
-			$this->document->setTc_og($this->tc_og());			
-			
+
+			$this->data['microdata_twitter_account'] = $this->config->get('config_microdata_twitter_account');
+
+			$this->data['microdata_description_shot'] = @$this->microdatapro->clear($this->mbCutString($this->data['microdata_description'], 290));
+			$this->document->setTc_og($this->tc_og());
+
 			$bebug_info=array('a','b','c','d');
 			foreach($bebug_info as $info){
 				$this->data[$info] = $$info?$$info:$this->config->get('config_microdata_twitter_account');
@@ -430,7 +432,7 @@ class ControllerExtensionModuleMicrodataPro extends Controller {
 				if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/module/microdatapro/microdatapro.tpl')) {
 					return $this->load->view($this->config->get('config_template') . '/template/module/microdatapro/microdatapro.tpl', $this->data);
 				} else {
-					return $this->load->view('default/template/module/microdatapro/microdatapro.tpl', $this->data);					
+					return $this->load->view('default/template/module/microdatapro/microdatapro.tpl', $this->data);
 				}
 			}else{ //1.X
 				if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/module/microdatapro/microdatapro.tpl')) {
@@ -440,34 +442,34 @@ class ControllerExtensionModuleMicrodataPro extends Controller {
 				}
 				return $this->render();
 			}
-			
-		}
-	  }	
-	
 
-	
+		}
+	  }
+
+
+
 	public function getImage($image,$w=375,$h=375){
 		if($image && $w && $h){
 			$this->load->model('tool/image');
-			return $this->model_tool_image->resize($image, $w, $h);		
+			return $this->model_tool_image->resize($image, $w, $h);
 		}
-	}	
-	
+	}
+
 	public function mbCutString($str, $length, $encoding='UTF-8'){
 		if (function_exists('mb_strlen') && (mb_strlen($str, $encoding) <= $length)) {
 			return $str;
 		}
 		if (function_exists('mb_substr')){
 			$tmp = mb_substr($str, 0, $length, $encoding);
-			return mb_substr($tmp, 0, mb_strripos($tmp, ' ', 0, $encoding), $encoding); 			
+			return mb_substr($tmp, 0, mb_strripos($tmp, ' ', 0, $encoding), $encoding);
 		}else{
 			return $str;
 		}
 
-	}	
-	
+	}
+
 	public function tc_og($data = array()){
-		
+
 		if($this->microdatapro->opencart_version(0) == 2 && $this->microdatapro->opencart_version(1) >= 2){ //over 2.2
 			if($this->microdatapro->opencart_version(1) >= 3){ //over 2.3
 				return $this->load->view('extension/module/microdatapro/tc_og', $this->data);
@@ -478,8 +480,8 @@ class ControllerExtensionModuleMicrodataPro extends Controller {
 			if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/module/microdatapro/tc_og.tpl')) {
 				return $this->load->view($this->config->get('config_template') . '/template/module/microdatapro/tc_og.tpl', $this->data);
 			} else {
-				return $this->load->view('default/template/module/microdatapro/tc_og.tpl', $this->data);					
-			}	
+				return $this->load->view('default/template/module/microdatapro/tc_og.tpl', $this->data);
+			}
 		}else{ //1.X
 			if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/module/microdatapro/tc_og.tpl')) {
 				$this->template = $this->config->get('config_template') . '/template/module/microdatapro/tc_og.tpl';
@@ -488,12 +490,12 @@ class ControllerExtensionModuleMicrodataPro extends Controller {
 			}
 			return $this->render();
 		}
-	} 	
-	
+	}
+
 	public function min_max($results = array(0,0), $page_id = false, $page_type = false){
 
 		$this->data['prices'] = array();
-	
+
 		if($results){
 			foreach ($results as $result) {
 				$this->data['prices'][] = $this->convert((float)($result['special']?$this->tax->calculate($result['special'], $result['tax_class_id'], $this->config->get('config_tax')):$this->tax->calculate($result['price'], $result['tax_class_id'], $this->config->get('config_tax'))), $this->config->get('config_currency'), $this->data['microdata_code']);
@@ -504,11 +506,11 @@ class ControllerExtensionModuleMicrodataPro extends Controller {
 		$microdata_category_rating = 0;
 		$this->data['microdata_category_rating'] = 0;
 		$this->data['microdata_category_rating_count'] = 0;
-		
+
 		if($page_type == 'category'){
 			$data = array(
 				'filter_category_id' => $page_id,
-				'filter_filter'      => isset($this->request->get['filter'])?$this->request->get['filter']:'', 
+				'filter_filter'      => isset($this->request->get['filter'])?$this->request->get['filter']:'',
 				'sort'               => isset($this->request->get['sort'])?$this->request->get['sort']:'p.sort_order',
 				'order'              => isset($this->request->get['order'])?$this->request->get['order']:'ASC',
 				'start'              => 0,
@@ -519,7 +521,7 @@ class ControllerExtensionModuleMicrodataPro extends Controller {
 				$results_review = $this->model_catalog_review->getReviewsByProductId($result['product_id']);
 				foreach ($results_review as $review) {
 					$microdata_category_rating += (int)$review['rating'];
-					if((int)$review['rating']) $this->data['microdata_category_rating_count']++; 
+					if((int)$review['rating']) $this->data['microdata_category_rating_count']++;
 				}
 			}
 			$this->data['microdata_category_rating'] = 0;
@@ -541,13 +543,13 @@ class ControllerExtensionModuleMicrodataPro extends Controller {
 				$results_review = $this->model_catalog_review->getReviewsByProductId($result['product_id']);
 				foreach ($results_review as $review) {
 					$microdata_category_rating += (int)$review['rating'];
-					if((int)$review['rating']) $this->data['microdata_category_rating_count']++; 
+					if((int)$review['rating']) $this->data['microdata_category_rating_count']++;
 				}
 			}
 			$this->data['microdata_category_rating'] = 0;
 			if($this->data['microdata_category_rating_count']){
 				$this->data['microdata_category_rating'] = (float)($microdata_category_rating/$this->data['microdata_category_rating_count']);
-			};			
+			};
 		}
 
 		if($page_type == 'special'){
@@ -562,15 +564,15 @@ class ControllerExtensionModuleMicrodataPro extends Controller {
 				$results_review = $this->model_catalog_review->getReviewsByProductId($result['product_id']);
 				foreach ($results_review as $review) {
 					$microdata_category_rating += (int)$review['rating'];
-					if((int)$review['rating']) $this->data['microdata_category_rating_count']++; 
+					if((int)$review['rating']) $this->data['microdata_category_rating_count']++;
 				}
 			}
 			$this->data['microdata_category_rating'] = 0;
 			if($this->data['microdata_category_rating_count']){
 				$this->data['microdata_category_rating'] = (float)($microdata_category_rating/$this->data['microdata_category_rating_count']);
 			}
-		}		
-		
+		}
+
 		if($page_type and ($this->config->get('config_'.$page_type.'_manual_rating') or $this->config->get('config_'.$page_type.'_manual_count'))){
 			if($this->config->get('config_'.$page_type.'_manual_rating')) $this->data['microdata_category_rating'] = trim((float)$this->config->get('config_'.$page_type.'_manual_rating'));
 			if($this->config->get('config_'.$page_type.'_manual_count')) $this->data['microdata_category_rating_count'] = trim((int)$this->config->get('config_'.$page_type.'_manual_count'));
@@ -586,7 +588,7 @@ class ControllerExtensionModuleMicrodataPro extends Controller {
 				return $this->load->view($this->config->get('config_template') . '/template/module/microdatapro/min_max.tpl', $this->data);
 			} else {
 				return $this->load->view('default/template/module/microdatapro/min_max.tpl', $this->data);
-			}	
+			}
 		}else{ //1.X
 			if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/module/microdatapro/min_max.tpl')) {
 				$this->template = $this->config->get('config_template') . '/template/module/microdatapro/min_max.tpl';
@@ -595,15 +597,15 @@ class ControllerExtensionModuleMicrodataPro extends Controller {
 			}
 			return $this->render();
 		}
-	} 
-	
+	}
+
 	public function products($results = array(), $type = 'json', $related = false){
 		$this->data['microdata_products'] = array();
 		$this->data['prices'] = array();
 		if($results){
-			foreach ($results as $result) {	
+			foreach ($results as $result) {
 				$result = $this->microdatapro->clear_array($result);
-				$price_format = $this->convert((float)($result['special']?$this->tax->calculate($result['special'], $result['tax_class_id'], $this->config->get('config_tax')):$this->tax->calculate($result['price'], $result['tax_class_id'], $this->config->get('config_tax'))), $this->config->get('config_currency'), $this->data['microdata_code']);						
+				$price_format = $this->convert((float)($result['special']?$this->tax->calculate($result['special'], $result['tax_class_id'], $this->config->get('config_tax')):$this->tax->calculate($result['price'], $result['tax_class_id'], $this->config->get('config_tax'))), $this->config->get('config_currency'), $this->data['microdata_code']);
 
 				if($this->microdatapro->opencart_version(0) == 2 && $this->microdatapro->opencart_version(1) >= 2){ //over 2.2
 					$ipw = $this->config->get($this->config->get('config_theme') . '_image_thumb_width');
@@ -611,7 +613,7 @@ class ControllerExtensionModuleMicrodataPro extends Controller {
 					if($related){
 						$ipw = $this->config->get($this->config->get('config_theme') . '_image_category_width');
 						$iph = $this->config->get($this->config->get('config_theme') . '_image_category_height');
-					}				
+					}
 				}else{
 					$ipw = $this->config->get('config_image_product_width');
 					$iph = $this->config->get('config_image_product_height');
@@ -620,13 +622,13 @@ class ControllerExtensionModuleMicrodataPro extends Controller {
 						$iph = $this->config->get('config_image_category_height');
 					}
 				}
-				
+
 
 				$pre_description = @$this->microdatapro->clear(utf8_substr(strip_tags(html_entity_decode($result['description']?$result['description']:$this->config->get('config_microdata_product_description'), ENT_QUOTES, 'UTF-8')), 0, ($this->config->get('config_product_description_length')?$this->config->get('config_product_description_length'):100)) . '..', false);
 
 				$this->data['microdata_products'][] = array(
 					'microdata_description' => $pre_description,
-					'microdata_price' => $price_format,					
+					'microdata_price' => $price_format,
 					'thumb'   	 => $this->getImage(($result['image']?$result['image']:$this->config->get('config_logo')), $ipw, $iph),
 					'name'    	 => $this->microdatapro->clear(@$result['name']),
 					'href'    	 => $this->url->link('product/product', 'product_id=' . $result['product_id'])
@@ -634,7 +636,7 @@ class ControllerExtensionModuleMicrodataPro extends Controller {
 				$this->data['prices'][] = $price_format;
 			}
 		}
-		
+
 		$this->data['related_block'] = $related;
 		if($this->microdatapro->opencart_version(0) == 2 && $this->microdatapro->opencart_version(1) >= 2){ //over 2.2
 			if($this->microdatapro->opencart_version(1) >= 3){ //over 2.3
@@ -646,8 +648,8 @@ class ControllerExtensionModuleMicrodataPro extends Controller {
 			if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/module/microdatapro/products_'.$type.'.tpl')) {
 				return $this->load->view($this->config->get('config_template') . '/template/module/microdatapro/products_'.$type.'.tpl', $this->data);
 			} else {
-				return $this->load->view('default/template/module/microdatapro/products_'.$type.'.tpl', $this->data);					
-			}	
+				return $this->load->view('default/template/module/microdatapro/products_'.$type.'.tpl', $this->data);
+			}
 		}else{ //1.X
 			if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/module/microdatapro/products_'.$type.'.tpl')) {
 				$this->template = $this->config->get('config_template') . '/template/module/microdatapro/products_'.$type.'.tpl';
@@ -657,7 +659,7 @@ class ControllerExtensionModuleMicrodataPro extends Controller {
 			return $this->render();
 		}
 	}
-	
+
 	public function category_info() {
 		$category_info = array();
 		if (isset($this->request->get['path'])) {
@@ -687,17 +689,17 @@ class ControllerExtensionModuleMicrodataPro extends Controller {
 			if(!isset($this->data['microdata_breadcrumbs'])){
 				$this->data['microdata_breadcrumbs'] = array();
 			}
-			
+
  			if($this->data['glob_route'] != "product/product"){
  			  if(isset($this->data['microdata_breadcrumbs']) and count($this->data['microdata_breadcrumbs']) > 0){
 				array_pop($this->data['microdata_breadcrumbs']);
-			  }			
-			}			
-		}	
+			  }
+			}
+		}
 
 		return $category_info;
 	}
-	
+
 	public function breadcrumbs($page, $page_data = array()) {
 		if($this->microdatapro->opencart_version(0) == 2){
 			$text_alt_home = $this->config->get('config_microdata_text_home')?$this->config->get('config_microdata_text_home'):$this->config->get('config_name');
@@ -709,22 +711,22 @@ class ControllerExtensionModuleMicrodataPro extends Controller {
 		$this->data['microdata_breadcrumbs'][] = array(
 			'text'      => $text_alt_home,
 			'href'      => $this->url->link('common/home')
-		);		
-		
-		if($page == 'product'){	
-			$this->category_info();			
+		);
+
+		if($page == 'product'){
+			$this->category_info();
 		}
-		
+
 		if($page == 'category'){
 			$this->category_info();
 		}
-	
+
 		if($page == 'manufacturer'){
-			$this->data['microdata_breadcrumbs'][] = array( 
+			$this->data['microdata_breadcrumbs'][] = array(
 				'text'      => $this->language->get('text_brand'),
 				'href'      => $this->url->link('product/manufacturer')
 			);
-		}		
+		}
 
 		if($this->microdatapro->opencart_version(0) == 2 && $this->microdatapro->opencart_version(1) >= 2){ //over 2.2
 			if($this->microdatapro->opencart_version(1) >= 3){ //over 2.3
@@ -736,8 +738,8 @@ class ControllerExtensionModuleMicrodataPro extends Controller {
 			if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/module/microdatapro/breadcrumbs.tpl')) {
 				return $this->load->view($this->config->get('config_template') . '/template/module/microdatapro/breadcrumbs.tpl', $this->data);
 			} else {
-				return $this->load->view('default/template/module/microdatapro/breadcrumbs.tpl', $this->data);					
-			}	
+				return $this->load->view('default/template/module/microdatapro/breadcrumbs.tpl', $this->data);
+			}
 		}else{ //1.X
 			if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/module/microdatapro/breadcrumbs.tpl')) {
 				$this->template = $this->config->get('config_template') . '/template/module/microdatapro/breadcrumbs.tpl';
@@ -745,8 +747,8 @@ class ControllerExtensionModuleMicrodataPro extends Controller {
 				$this->template = 'default/template/module/microdatapro/breadcrumbs.tpl';
 			}
 			return $this->render();
-		}		
-		
+		}
+
 	}
 
 	public function getConfig($key = false) {
@@ -765,28 +767,28 @@ class ControllerExtensionModuleMicrodataPro extends Controller {
 
 		return $key?$data[$key]:$data;
 	}
-	
+
 	public function getAllRating($key) {
 		$data = 0;
 		$query = $this->db->query("SELECT rating FROM `" . DB_PREFIX . "review`");
 
 		$count = count($query->rows)?count($query->rows):0;
-		
+
 		if($count){
 			if($key == 'value'){
 				$all = 0;
 				foreach ($query->rows as $result){
 					$all += $result['rating'];
 				}
-				
+
 				$data = (float)($all/$count);
-				
+
 			}
-			
+
 			if($key == 'count'){
 				$data = $count;
 			}
-		}		
+		}
 
 		return $data;
 	}
@@ -799,8 +801,8 @@ class ControllerExtensionModuleMicrodataPro extends Controller {
 				'currency_id'   => $result['currency_id'],
 				'decimal_place' => $result['decimal_place'],
 				'value'         => $result['value']
-			); 
-		}		
+			);
+		}
 
 		$from = isset($currencies[$from])?$currencies[$from]['value']:1;
 		$to = isset($currencies[$to])?$currencies[$to]['value']:1;
