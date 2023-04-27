@@ -55,6 +55,19 @@ class ControllerStartupSeoPro extends Controller {
 			list($last_part) = explode('.', array_pop($parts));
 			array_push($parts, $last_part);
 
+			$sql = "SELECT url_alias_id FROM " . DB_PREFIX . "url_alias WHERE keyword = '".$parts[0]."'";
+			$query_1 = $this->db->query($sql);
+
+			$sql = "SELECT url_alias_id FROM " . DB_PREFIX . "url_alias WHERE keyword = '".$parts[1]."'";
+			$query_2 = $this->db->query($sql);
+
+
+			if ($query_1->num_rows == 0 || $query_2->num_rows == 0) {
+				header($this->request->server['SERVER_PROTOCOL'] . ' 404 Not Found');
+			}
+
+
+
 
 
 			//Надо определить продукт это или категория
